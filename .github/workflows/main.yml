@@ -1,0 +1,38 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: CI
+    runs-on: ubuntu-latest  
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+  
+      - name: Set Permissions for gradlew
+        run: chmod +x gradlew
+  
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+  
+      - name: Build and Test with Gradle
+        run: ./gradlew clean test
+      
+  deploy:
+     name: CD
+     needs: [CI]
+     runs-on: ubuntu-latest
+
+     steps:
+       - name: Deploy to production
+         uses: johnbeynon/render-deploy-action@v0.0.8
+         with:
+           service-id: ${{ secrets.SERVICE_ID }}
+           api-key: ${{ secrets.RENDER_API_KEY }}
