@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  ci:
     name: CI
     runs-on: ubuntu-latest  
     steps:
@@ -25,9 +25,9 @@ jobs:
       - name: Build and Test with Gradle
         run: ./gradlew clean test
       
-  deploy:
+  cd:
      name: CD
-     needs: [CI]
+     needs: [ci]
      runs-on: ubuntu-latest
 
      steps:
